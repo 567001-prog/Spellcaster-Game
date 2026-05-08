@@ -1,8 +1,7 @@
 import turtle as trtl
 
 # variable
-screen = trtl.Screen()        
-monster_health = 100            # change later
+screen = trtl.Screen()          # change later
 player_x = -200                 # The starting X coordinate for the attack
 player_y = 0                    # The starting Y coordinate for the attack
 monster_x = 200                 # The target X coordinate to move towards
@@ -15,6 +14,7 @@ def register_attack_images(game_screen):
         game_screen.register_shape(f"{i}.gif")
 
 def launch_attack(attack_name):
+  global monster_health
   attack_value = 0
   projectile = trtl.Turtle()
   projectile.penup()
@@ -107,7 +107,7 @@ def launch_attack(attack_name):
     
     
     # animation for attack
-   projectile.speed(1)         
+  projectile.speed(1)         
   projectile.goto(monster_x, monster_y) # monster location
     
   projectile.hideturtle()
@@ -120,4 +120,3 @@ register_attack_images(screen)
 launch_attack("water ball")
 
 screen.mainloop()
-
