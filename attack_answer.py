@@ -1,7 +1,7 @@
-import turtle
+import turtle as trtl
 
 # variable
-screen = turtle.Screen()        
+screen = trtl.Screen()        
 monster_health = 100            # change later
 player_x = -200                 # The starting X coordinate for the attack
 player_y = 0                    # The starting Y coordinate for the attack
@@ -13,8 +13,8 @@ def register_attack_images(game_screen):
     for i in range(1, 21):
         game_screen.register_shape(f"{i}.gif")
 
-def attack(image_filename):
-    projectile = turtle.Turtle()
+def attack(attack_name):
+    projectile = trtl.Turtle()
     projectile.penup()
     projectile.hideturtle()       
     projectile.speed(0)           
@@ -23,8 +23,67 @@ def attack(image_filename):
     projectile.goto(player_x, player_y) 
     
     # set to image
-    projectile.shape(image_filename)
-    projectile.showturtle()
+    if attack_name == 'fire ball':
+      projectile.shape("1.gif")
+      projectile.showturtle()
+    if attack_name == 'water ball':
+      projectile.shape("2.gif")
+      projectile.showturtle()
+    if attack_name == 'ice ball':
+      projectile.shape("3.gif")
+      projectile.showturtle()
+    if attack_name == 'wind ball':
+      projectile.shape("4.gif")
+      projectile.showturtle()
+    if attack_name == 'earth ball':
+      projectile.shape("5.gif")
+      projectile.showturtle()
+    if attack_name == 'fire beam':
+      projectile.shape("6.gif")
+      projectile.showturtle()
+    if attack_name == 'water beam':
+      projectile.shape("7.gif")
+      projectile.showturtle()
+    if attack_name == 'ice beam':
+      projectile.shape("8.gif")
+      projectile.showturtle()
+    if attack_name == 'wind beam':
+      projectile.shape("9.gif")
+      projectile.showturtle()
+    if attack_name == 'earth beam':
+      projectile.shape("10.gif")
+      projectile.showturtle()
+    if attack_name == 'fire fist':
+      projectile.shape("11.gif")
+      projectile.showturtle()
+    if attack_name == 'ice fist':
+      projectile.shape("12.gif")
+      projectile.showturtle()
+    if attack_name == 'water fist':
+      projectile.shape("13.gif")
+      projectile.showturtle()
+    if attack_name == 'wind fist':
+      projectile.shape("14.gif")
+      projectile.showturtle()
+    if attack_name == 'earth fist':
+      projectile.shape("15.gif")
+      projectile.showturtle()
+    if attack_name == 'water dagger':
+      projectile.shape("16.gif")
+      projectile.showturtle()
+    if attack_name == 'wind dagger':
+      projectile.shape("17.gif")
+      projectile.showturtle()
+    if attack_name == 'ice dagger':
+      projectile.shape("18.gif")
+      projectile.showturtle()
+    if attack_name == 'fire dagger':
+      projectile.shape("19.gif")
+      projectile.showturtle()
+    if attack_name == 'earth dagger':
+      projectile.shape("20.gif")
+      projectile.showturtle()
+    
     
     # animation for attack
     projectile.speed(1)         
@@ -39,8 +98,7 @@ def attack(image_filename):
 
 
 register_attack_images(screen)
-attack("6.gif")
+attack(" ") ###PUT ATTACK NAME HERE TO TEST
 
 screen.mainloop()
-
 
