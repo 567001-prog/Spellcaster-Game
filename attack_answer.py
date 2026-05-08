@@ -1,10 +1,10 @@
 import random
 
-fire_damage = 15
-water_damage = 12
-earth_damage = 20
-wind_damage = 8
-ice_damage = 18
+fire_damage = 8
+water_damage = 6
+earth_damage = 10
+wind_damage = 4
+ice_damage = 9
 
 elements = ["fire", "water", "earth", "wind", "ice"]
 element_damages = [fire_damage, water_damage, earth_damage, wind_damage, ice_damage]
