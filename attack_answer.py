@@ -10,7 +10,6 @@ pen.penup()
 pen.color("white")
 
 
-# clears the text
 def clear_text():
   pen.clear()
 
@@ -33,12 +32,12 @@ def start():
   current_y = 120
 
   for line in intro_text:
-  pen.goto(0, current_y)
+    pen.goto(0, current_y)
 
   pen.write(
-      line,
-      align="center",
-      font=("Times New Roman", 25, "bold")
+    line,
+    align="center",
+    font=("Times New Roman", 25, "bold")
   )
 
   current_y -= 50
