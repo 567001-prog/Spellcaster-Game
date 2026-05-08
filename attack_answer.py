@@ -12,36 +12,36 @@ pen.color("white")
 
 # clears the text
 def clear_text():
-    pen.clear()
+  pen.clear()
 
 
 def start():
-    name = wn.textinput("Name Entry", "What is your name?")
+  name = wn.textinput("Name Entry", "What is your name?")
 
-    if name is None:
-        name = "loser"
+  if name is None:
+    name = "loser"
 
-    intro_text = [
-        f"Hello, {name}! Your kingdom is under attack.",
-        "You must defeat the monsters to save the kingdom.",
-        "Unscramble the spell before time runs out.",
-        "There are 4 monsters headed your way.",
-        "Press 'c' to continue.",
-        "Good luck!"
-    ]
+  intro_text = [
+    f"Hello, {name}! Your kingdom is under attack.",
+    "You must defeat the monsters to save the kingdom.",
+    "Unscramble the spell before time runs out.",
+    "There are 4 monsters headed your way.",
+    "Press 'c' to continue.",
+    "Good luck!"
+  ]
 
-    current_y = 120
+  current_y = 120
 
-    for line in intro_text:
-        pen.goto(0, current_y)
+  for line in intro_text:
+  pen.goto(0, current_y)
 
-        pen.write(
-            line,
-            align="center",
-            font=("Times New Roman", 25, "bold")
-        )
+  pen.write(
+      line,
+      align="center",
+      font=("Times New Roman", 25, "bold")
+  )
 
-        current_y -= 50
+  current_y -= 50
 
 start()
 wn.listen()
