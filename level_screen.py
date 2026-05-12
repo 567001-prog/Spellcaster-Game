@@ -11,16 +11,17 @@ pen.color("white")
 
 def next_screen():
   pen.clear()
-    #add the next screen here :)
+  #put next screen here!! :)
 
-def show_level_screen():
+def show_level_screen(level_number):
+  pen.clear()
   pen.goto(0, 0)
-  pen.write("Level 1", align="center", font=("Times New Roman", 60, "bold"))
-  
+  pen.write(f"Level {level_number}", align="center", font=("Times New Roman", 60, "bold"))
   pen.goto(0, -90)
-  pen.write("Press '1' to Start", align="center", font=("Times New Roman", 20, "normal"))
+  pen.write(f"Press '{level_number}' to Start", align="center", font=("Times New Roman", 20, "normal"))
+  wn.listen()
+  #got rid of the on key
 
-show_level_screen()
+# example: show_level_screen(5)
 
-wn.listen()
 wn.mainloop()
