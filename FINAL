@@ -1,0 +1,448 @@
+"""
+This is our spellcaster game
+"""
+
+# SETUP ----------------------------
+
+import random as rand
+import turtle as trtl
+import threading
+import time
+
+wn = trtl.Screen()
+wn.setup(width=1.0, height=1.0)
+wn.bgpic("output-onlinepngtools (2).gif")
+# ---------------------------------------------
+pen = trtl.Turtle()
+pen.hideturtle()
+pen.penup()
+pen.color("white")
+
+writer = trtl.Turtle()
+writer.color('white')
+writer.hideturtle()
+writer.penup()
+
+projectile = trtl.Turtle()
+projectile.hideturtle()
+projectile.penup()
+
+monster = trtl.Turtle()
+monster.penup()
+monster.hideturtle()
+
+mc = trtl.Turtle()
+mc.penup()
+mc.hideturtle()
+
+bank = trtl.Turtle()
+bank.hideturtle()
+bank.penup()
+bank.color("white")
+
+# VARIABLES ----------------------
+fire_damage = 15
+water_damage = 12
+earth_damage = 17
+wind_damage = 8
+ice_damage = 10
+
+elements = ["fire", "water", "earth", "wind", "ice"]
+element_damages = [fire_damage, water_damage, earth_damage, wind_damage, ice_damage]
+
+# attack types + how much they multiply damage
+attack_types = ["fist", "dagger", "ball", "beam"]
+attack_multipliers = [1.0, 1.4, 1.6, 1.8]
+
+damage = ''
+element = ''
+attack = ''
+attempt = ''
+full_attack = '' #these are temporary until the random function is made
+
+timer = 10
+counter_interval = 1000 
+timer_up = False
+
+player_health = 45
+player_x = -350                 # The starting X coordinate for the attack
+player_y = -75                   # The starting Y coordinate for the attack
+monster_x = 300                 # The target X coordinate to move towards
+monster_y = -100                  # The target Y coordinate to move towards
+monster_health = 30
+
+lvl = 1
+wonq = False
+word_bank = ["fire", "water", "earth", "wind", "ice", "fist", "dagger", "ball", "beam"]
+
+#------
+monster.goto(monster_x, monster_y)
+
+# FUNCTIONS ----------------------
+def show_level_screen(level_number):
+  pen.clear()
+  writer.clear()
+  pen.goto(0, 100)
+  pen.write(f"Level {level_number}", align="center", font=("Times New Roman", 60, "bold"))
+
+def attack_quiz():
+    global lvl, monster_health, player_health
+
+    pen.clear()
+
+    mc.shape("mainc.gif")
+    mc.goto(player_x, player_y)
+    mc.showturtle()
+
+    player_health = 45
+
+
+    if lvl - 1 == 1:
+      #lvl 1 monsters
+      monster.shape("lvl1.gif")
+      monster.showturtle()
+      bank.goto(0, 250)
+      bank.write(word_bank, align = 'center', font = ('Book Antiqua', 15, 'normal'))
+      bank.goto(0, 280)
+      bank.write('Word Bank:', align = 'center', font = ('Book Antiqua', 15, 'normal'))
+    elif lvl - 1 == 2:
+      #lvl 2 monster
+      monster_health = 45
+      monster.shape("lvl2.gif")
+      monster.showturtle()
+    elif lvl - 1 == 3:
+      # lvl 3 monster
+      bank.clear()
+      monster_health = 50
+      monster.shape("lvl3.gif")
+      monster.showturtle()
+    elif lvl - 1 == 4:
+      #lvl 4 monster
+      monster_health = 60
+      monster.shape("lvl4.gif")
+      monster.showturtle()
+
+    while monster_health > 0 and player_health > 0:
+      pen.clear()
+      random_attack()
+      attack_answer()
+
+def start():
+    global name
+
+    name = wn.textinput("Name Entry", "What is your name?")
+
+    if name is None:
+        name = "loser"
+
+    intro_text = [
+        f"Hello, {name}! Your kingdom is under attack.",
+        "You must defeat the monsters to save the kingdom.",
+        "Unscramble the spell before time runs out.",
+        "There are 4 monsters headed your way.",
+        "Good luck!"
+    ]
+    
+
+    current_y = 120
+
+    for line in intro_text:
+        pen.goto(0, current_y)
+
+        pen.write(
+            line,
+            align="center",
+            font=("Times New Roman", 25, "bold")
+        )
+
+        current_y -= 50
+    
+def random_attack():
+    global element, attack, damage, full_attack
+    # pick random element
+    rand_index = rand.randint(0, len(elements) - 1)
+    element = elements[rand_index]
+    base_damage = element_damages[rand_index]
+
+    # pick random attack type
+    rand_index2 = rand.randint(0, len(attack_types) - 1)
+    attack = attack_types[rand_index2]
+    multiplier = attack_multipliers[rand_index2]
+
+    # calculate damage
+    damage = base_damage * multiplier
+    damage = int(damage)  # remove decimal
+
+    full_attack = element + ' ' + attack
+
+def register_attack_images(game_screen):
+    for i in range(1, 21):
+        game_screen.register_shape(f"{i}.gif")
+    game_screen.register_shape("monster_attack.gif")
+    game_screen.register_shape("mainc.gif")
+    game_screen.register_shape("lvl1.gif")
+    game_screen.register_shape("lvl2.gif")
+    game_screen.register_shape("lvl3.gif")
+    game_screen.register_shape("lvl4.gif")
+
+def launch_attack(attack_name):
+  global monster_health
+  
+  projectile.penup()
+  projectile.hideturtle()
+  projectile.speed(0)
+  # player location
+  projectile.goto(player_x, player_y) 
+    
+    # set to image
+  if attack_name == 'fire ball':
+    projectile.shape("1.gif")
+    projectile.showturtle()
+  if attack_name == 'water ball':
+    projectile.shape("2.gif")
+    projectile.showturtle()
+  if attack_name == 'ice ball':
+    projectile.shape("3.gif")
+    projectile.showturtle()
+  if attack_name == 'wind ball':
+    projectile.shape("4.gif")
+    projectile.showturtle()
+  if attack_name == 'earth ball':
+    projectile.shape("5.gif")
+    projectile.showturtle()
+  if attack_name == 'fire beam':
+    projectile.shape("6.gif")
+    projectile.showturtle()
+  if attack_name == 'water beam':
+    projectile.shape("7.gif")
+    projectile.showturtle()
+  if attack_name == 'ice beam':
+    projectile.shape("8.gif")
+    projectile.showturtle()
+  if attack_name == 'wind beam':
+    projectile.shape("9.gif")
+    projectile.showturtle()
+  if attack_name == 'earth beam':
+    projectile.shape("10.gif")
+    projectile.showturtle()
+  if attack_name == 'fire fist':
+    projectile.shape("11.gif")
+    projectile.showturtle()
+  if attack_name == 'ice fist':
+    projectile.shape("12.gif")
+    projectile.showturtle()
+  if attack_name == 'water fist':
+    projectile.shape("13.gif")
+    projectile.showturtle()
+  if attack_name == 'wind fist':
+    projectile.shape("14.gif")
+    projectile.showturtle()
+  if attack_name == 'earth fist':
+    projectile.shape("15.gif")
+    projectile.showturtle()
+  if attack_name == 'water dagger':
+    projectile.shape("16.gif")
+    projectile.showturtle()
+  if attack_name == 'wind dagger':
+    projectile.shape("17.gif")
+    projectile.showturtle()
+  if attack_name == 'ice dagger':
+    projectile.shape("18.gif")
+    projectile.showturtle()
+  if attack_name == 'fire dagger':
+    projectile.shape("19.gif")
+    projectile.showturtle()
+  if attack_name == 'earth dagger':
+    projectile.shape("20.gif")
+    projectile.showturtle()
+    
+    
+    # animation for attack
+  projectile.speed(1.5)         
+  projectile.goto(monster_x, monster_y) # monster location
+    
+  projectile.hideturtle()
+    
+  monster_health -= damage
+  print(f"Hit! Monster health is now {monster_health}")
+
+def monster_attacks():
+   #wait 2 seconds
+   time.sleep(2)
+
+   global player_health
+   monster_damage = rand.randint(7,17)
+
+   writer.clear()
+   writer.goto(0, 100)
+   writer.write('Incoming attack!', align = 'center', font = ('Book Antiqua', 24, 'normal'))
+
+   projectile.shape("monster_attack.gif")
+   projectile.goto(monster_x, monster_y)
+   projectile.showturtle()
+   projectile.penup()
+   projectile.speed(1.5)
+   projectile.goto(player_x, player_y)
+   projectile.hideturtle()
+
+   player_health -= monster_damage
+   print(f"Hit! Your health is now {player_health}")
+
+   writer.clear()
+
+   time.sleep(1)
+
+def countdown():
+  global timer, timer_up
+  while timer > 0 and not timer_up:
+    print("\rTimer: " + str(timer) + "  ", end='', flush = True)
+    timer -= 1
+    time.sleep(1)
+  if not timer_up:
+    print("\rTime's Up!   Press OK to continue   ")
+    timer_up = True
+
+# check if the user's answer is correct 
+# + what happens when the user types correct or incorrect answer
+def check_answer():
+  global timer_up, attempt, full_attack
+  if timer_up:
+    return
+  if (attempt == full_attack):
+    writer.clear()
+    writer.penup()
+    writer.goto(0, 100)
+    writer.write('Attack!', align = 'center', font=('Book Antiqua', 24, 'normal'))
+    timer_up = True
+    print("Correct!")
+    launch_attack(full_attack)
+  while not timer_up and attempt != full_attack:
+    attempt = wn.textinput("Wrong!", "Try again:")
+    check_answer()
+
+# shuffles answer and waits for the user to type in the incorrect or correct answer
+def attack_answer():
+    global attempt, timer, timer_up, lvl, wonq, monster_health
+
+    timer = 10
+    timer_up = False
+
+    #scramble element and attack
+    ele = list(element)
+    rand.shuffle(ele)
+    shuf_ele = ''.join(ele)
+
+    ata = list(attack)
+    rand.shuffle(ata)
+    shuf_ata = ''.join(ata)
+
+    shuf_full = shuf_ele + ' ' + shuf_ata
+
+    writer.clear()
+    writer.penup()
+    writer.hideturtle()
+    writer.goto(0, 100)
+    writer.write(shuf_full, align = 'center', font = ('Book Antiqua', 24, 'normal'))
+
+    threading.Thread(target = countdown, daemon = True).start()
+
+    attempt = wn.textinput("Spell Check", "Type the spell:")
+
+    if not timer_up:
+        check_answer()
+    
+    if monster_health > 0:
+      if player_health <= 0:
+        writer.clear()
+        writer.goto(0, 100)
+        writer.write('You lose', align='center', font = ('Book Antiqua', 36, 'bold'))
+        wonq = False
+        time.sleep(3)
+        writer.clear()
+      else:
+        monster_attacks()
+    
+    elif monster_health <= 0:
+      writer.clear()
+      writer.goto(0, 100)
+      writer.write('You won!', align = 'center', font = ('Book Antiqua', 24, 'normal'))
+
+      wonq = True
+
+      time.sleep(3)
+      writer.clear()
+      monster.hideturtle()
+      mc.hideturtle()
+
+def end():
+    global name, wonq
+    bank.clear()
+
+    pen.clear()
+    if wonq:
+        status = "VICTORY"
+        message_color = "gold"
+        end_text = [
+            f"Congratulations, {name}!",
+            "Thank you so much for saving our kingdom!"
+        ]
+    else:
+        status = "DEFEAT"
+        message_color = "red"
+        end_text = [
+            f"You lost, {name}...",
+            f"The kingdom has collapsed..."
+        ]
+
+    pen.color(message_color)
+    pen.goto(0, 180)
+    pen.write(status, align="center", font=("Impact", 40, "bold"))
+
+    pen.color("white")
+    current_y = 80
+
+    for line in end_text:
+        pen.goto(0, current_y)
+        pen.write(
+            line,
+            align="center",
+            font=("Times New Roman", 22, "bold")
+        )
+        current_y -= 50
+
+# CALLS --------------------------
+register_attack_images(wn)
+start()
+time.sleep(6)
+wn.listen()
+
+lvl = 2 # next lvl prep variable
+attack_quiz()
+
+if wonq:
+  wonq = False
+  lvl = 3
+  show_level_screen(2)
+  wn.textinput('Level 2', 'Press OK to begin Level 2!')
+  attack_quiz()
+
+if wonq:
+  wonq = False
+  lvl = 4
+  show_level_screen(3)
+  wn.textinput('Level 3', 'Press OK to begin Level 3!')
+  attack_quiz()
+
+if wonq:
+  wonq = False
+  lvl = 5
+  show_level_screen(4)
+  wn.textinput('Level 4', 'Press OK to begin Level 4!')
+  attack_quiz()
+
+end()
+
+try:
+    wn.mainloop()
+except:
+    pass
